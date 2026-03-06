@@ -33,6 +33,10 @@ urlpatterns = [
 
     path('profile/', user_views.profile, name='profile'),
 
+    path('profile/<str:username>', user_views.profile, name='profile-dynamic'),
+
+    path('profile/update/',user_views.update,name='profile-update'),
+
     path('', include('blog.urls')),
 ]
 if settings.DEBUG:

@@ -3,7 +3,9 @@ from django.contrib import messages
 from .forms import UserRegisterForm,UserUpdateForm,ProfileUpdateForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-
+from blog.models import Post
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
 def logout_user(request):
     logout(request)
@@ -11,23 +13,36 @@ def logout_user(request):
     return redirect('blog-home')  
 
 @login_required
-def profile(request):
-    if request.method == 'POST':
-        u_form=UserUpdateForm(request.POST,instance=request.user)
-        p_form=ProfileUpdateForm(request.POST,request.FILES,instance=request.user.profile)
-        if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            p_form.save()
-            messages.success(request, "Your Details have been updated")
-            return redirect('profile')  
+def profile(request, username=None):
+    if username:
+        user = get_object_or_404(User, username=username)
     else:
-        u_form=UserUpdateForm(instance=request.user)
-        p_form=ProfileUpdateForm(instance=request.user.profile)
-    context={
-        'u_form':u_form,
-        'p_form':p_form,
+        user = request.user
+
+    posts = Post.objects.filter(author=user)
+    context = {
+        'posts': posts,
+        'user': user,
     }
-    return render(request,"users/profile.html",context)
+    return render(request, "users/profile.html", context)
+
+def update(request):
+    if request.method == 'POST':
+            u_form=UserUpdateForm(request.POST,instance=request.user)
+            p_form=ProfileUpdateForm(request.POST,request.FILES,instance=request.user.profile)
+            if u_form.is_valid() and p_form.is_valid():
+                u_form.save()
+                p_form.save()
+                messages.success(request, "Your Details have been updated")
+                return redirect('profile')  
+    else:
+            u_form=UserUpdateForm(instance=request.user)
+            p_form=ProfileUpdateForm(instance=request.user.profile)
+            context={
+            'u_form':u_form,
+            'p_form':p_form,
+        }
+    return render(request,"users/update.html",context)
 
 def register(request):
     if request.method == 'POST':

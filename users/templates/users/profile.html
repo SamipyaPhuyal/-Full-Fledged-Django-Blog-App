@@ -17,8 +17,43 @@
               {{ p_form|crispy }}
           </fieldset>
           <div class="form-group">
-              <button class="btn btn-outline-info" type="submit">Update</button>
+                <a href="{% url 'profile-update' %}">Update Profile</a>
+                </div>
+                <hr>
+                <a href="{% url 'post-create'  %}" style="color:green;" class="btn ">Create A Post
+                </a><br>
+                                Posts:<br>
+
+                {% for post in posts %}
+                {% if request.user == post.author %}
+                <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ post.author.profile.profile_img.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#" >{{ post.author }}</a>
+              <small class="text-muted">{{ post.time|date:"F d, Y" }}</small>
+              <a href="{% url 'post-update' post.id %}" class="btn">Edit</a>
+             <a href="{% url 'post-delete' post.id %}" style="color: red;" class="btn">Delete</a>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
           </div>
+        </article>
+                {% else %}
+                <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ post.author.profile.profile_img.url }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#" >{{ post.author }}</a>
+              <small class="text-muted">{{ post.time|date:"F d, Y" }}</small>
+            </div>
+            <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+            <p class="article-content">{{ post.content }}</p>
+          </div>
+        </article>
+        {% endif %}
+        {% endfor %}
+      
       </form>
     </div>
 {% endblock content %}

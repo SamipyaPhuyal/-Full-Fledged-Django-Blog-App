@@ -5,6 +5,10 @@
           <div class="media-body">
             <div class="article-metadata">
               <a class="mr-2" href="#">{{ object.author }}</a>
+              {% if request.user == post.author%}
+             <a href="{% url 'post-update' post.id %}" class="btn">Edit</a>
+             <a href="{% url 'post-delete' post.id %}" class="btn">Delete</a>
+              {% endif %}
               <small class="text-muted">{{ object.time|date:"F d, Y" }}</small>
             </div>
             <h2><a class="article-title" href="#">{{ object.title }}</a></h2>
