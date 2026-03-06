@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,6 +55,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'myproject.urls'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 TEMPLATES = [
     {
@@ -120,6 +122,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 MEDIA_ROOT=os.path.join(BASE_DIR,"media")
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL="/media/"
 CRISPY_TEMPLATE_PACK="bootstrap5"
 
